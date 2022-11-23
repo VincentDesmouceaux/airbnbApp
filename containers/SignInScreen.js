@@ -63,6 +63,7 @@ export default function SignInScreen({ setToken }) {
               event.preventDefault();
 
               try {
+                setErrorMessage("");
                 const response = await axios.post(
                   "https://express-airbnb-api.herokuapp.com/user/log_in",
                   {
