@@ -17,12 +17,12 @@ import { useState } from "react";
 
 import axios from "axios";
 
-import Constants from "expo-constants";
-
 export default function SignInScreen({ setToken }) {
   const navigation = useNavigation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage2, setErrorMessage2] = useState("");
   const userToken = "secret-token";
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -41,22 +41,26 @@ export default function SignInScreen({ setToken }) {
             placeholder="email"
             style={styles.input}
             defaultValue={email}
-            onChangeEmail={(newEmail) => setEmail(newEmail)}
+            onChangeText={(newEmail) => setEmail(newEmail)}
           />
 
+          {errorMessage2 && (
+            <Text style={{ color: "red", marginTop: 5 }}>{errorMessage2}</Text>
+          )}
           <TextInput
             placeholder="Password"
             secureTextEntry={true}
             style={styles.input}
             defaultValue={password}
-            onChangePassword={(newPassword) => setPassword(newPassword)}
+            onChangeText={(newPassword) => setPassword(newPassword)}
           />
+          {errorMessage && (
+            <Text style={{ color: "red", marginTop: 5 }}>{errorMessage}</Text>
+          )}
           <Button
             title="Sign in"
             onPress={async (event) => {
               event.preventDefault();
-
-              alert(email);
 
               try {
                 const response = await axios.post(
@@ -67,15 +71,23 @@ export default function SignInScreen({ setToken }) {
                   }
                 );
                 console.log(response.data);
+                alert("Bienvenue!");
 
                 setToken(userToken);
               } catch (error) {
                 console.log(error.message);
                 console.log(error.response.data);
+                if (error.response?.status === 400) {
+                  setErrorMessage("Merci de remplir tous les champs !");
+                }
+                if (error.response?.status === 401) {
+                  setErrorMessage2("Mauvais email et/ou mot de passe  ");
+                }
               }
             }}
           />
           <TouchableOpacity
+            style={styles.btn}
             onPress={() => {
               navigation.navigate("SignUp");
             }}
@@ -91,7 +103,7 @@ export default function SignInScreen({ setToken }) {
 const styles = StyleSheet.create({
   safeAreaView: {
     backgroundColor: "#FFFFFF",
-    marginTop: Platform.OS === "android" ? Constants.statusBarHeight : 0,
+
     flex: 1,
   },
 
@@ -114,8 +126,21 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    // backgroundColor: "blue",
+    borderBottomColor: "red",
+    borderBottomWidth: 1,
     height: 50,
     margin: 30,
+  },
+
+  btn: {
+    borderColor: "#ffbac0",
+    borderWidth: 3,
+    height: 50,
+    width: 200,
+    alignItems: "center",
+    justifyContent: "center",
+    margin: 40,
+    borderRadius: 10,
+    marginLeft: 115,
   },
 });
