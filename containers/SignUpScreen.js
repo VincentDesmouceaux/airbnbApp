@@ -36,7 +36,7 @@ export default function SignUpScreen({ setToken }) {
           <Image
             style={styles.logo}
             source={require("../assets/airbnb_logo_icon_170605.png")}
-            resizeMethod="contain"
+            // resizeMethod="contain"
           />
           <Text style={styles.title}>Sign up</Text>
         </View>
@@ -161,8 +161,8 @@ const styles = StyleSheet.create({
   },
 
   logo: {
-    height: 100,
-    width: 100,
+    height: 20,
+    width: 20,
   },
 
   title: {

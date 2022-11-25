@@ -32,7 +32,6 @@ export default function SignInScreen({ setToken }) {
           <Image
             style={styles.logo}
             source={require("../assets/airbnb_logo_icon_170605.png")}
-            resizeMethod="contain"
           />
           <Text style={styles.title}>Sign in</Text>
         </View>

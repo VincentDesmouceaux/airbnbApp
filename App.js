@@ -9,8 +9,11 @@ import ProfileScreen from "./containers/ProfileScreen";
 import SignInScreen from "./containers/SignInScreen";
 import SignUpScreen from "./containers/SignUpScreen";
 import SettingsScreen from "./containers/SettingsScreen";
+import RoomScreen from "./containers/RoomScreen";
+import AroundMeScreen from "./containers/AroundMeScreen";
 import SplashScreen from "./containers/SplashScreen";
-
+import { Image } from "react-native";
+import Dimension from "react-native";
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
@@ -50,7 +53,11 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
+    <NavigationContainer
+      style={{
+        marginTop: Platform.OS === "android" ? Dimension.statusBarHeight : 0,
+      }}
+    >
       <Stack.Navigator>
         {userToken === null ? (
           // No token found, user isn't signed in
@@ -89,22 +96,40 @@ export default function App() {
                         options={{
                           headerStyle: { backgroundColor: "white" },
                           headerTitleStyle: { color: "white" },
+                          headerTitle: (props) => (
+                            <Image
+                              style={{ width: 30, height: 30 }}
+                              source={require("../airBnbapp/assets/airbnb_logo_icon_170605.png")}
+                              // resizeMode="contain"
+                            />
+                          ),
+                          headerTitleStyle: { flex: 1, textAlign: "center" },
                         }}
                       >
                         {() => <HomeScreen />}
                       </Stack.Screen>
-
                       <Stack.Screen
-                        name="Profile"
+                        name="Room"
                         options={{
-                          title: "User Profile",
+                          headerStyle: { backgroundColor: "white" },
+                          headerTitleStyle: { color: "white" },
+                          headerTitle: (props) => (
+                            <Image
+                              style={{ width: 30, height: 30 }}
+                              source={require("../airBnbapp/assets/airbnb_logo_icon_170605.png")}
+                              // resizeMode="contain"
+                            />
+                          ),
+                          headerTitleStyle: { flex: 1, textAlign: "center" },
                         }}
+                        component={RoomScreen}
                       >
-                        {() => <ProfileScreen />}
+                        {/* {() => <RoomScreen />} */}
                       </Stack.Screen>
                     </Stack.Navigator>
                   )}
                 </Tab.Screen>
+
                 <Tab.Screen
                   name="TabSettings"
                   options={{
@@ -129,6 +154,44 @@ export default function App() {
                         {() => <SettingsScreen setToken={setToken} />}
                       </Stack.Screen>
                     </Stack.Navigator>
+                  )}
+                </Tab.Screen>
+                <Tab.Screen
+                  name="Profile"
+                  options={{
+                    title: "My Profile",
+                  }}
+                >
+                  {() => <ProfileScreen />}
+                </Tab.Screen>
+
+                <Tab.Screen
+                  name="AroundMe"
+                  options={{
+                    tabBarLabel: "Around Me",
+                    tabBarIcon: ({ color, size }) => (
+                      <Ionicons name="map" size={24} color="black" />
+                    ),
+                  }}
+                >
+                  {() => (
+                    <Stack.Screen
+                      name="Map"
+                      options={{
+                        headerStyle: { backgroundColor: "white" },
+                        headerTitleStyle: { color: "white" },
+                        headerTitle: (props) => (
+                          <Image
+                            style={{ width: 30, height: 30 }}
+                            source={require("../airBnbapp/assets/airbnb_logo_icon_170605.png")}
+                            // resizeMode="contain"
+                          />
+                        ),
+                        headerTitleStyle: { flex: 1, textAlign: "center" },
+                      }}
+                    >
+                      {() => <AroundMeScreen />}
+                    </Stack.Screen>
                   )}
                 </Tab.Screen>
               </Tab.Navigator>

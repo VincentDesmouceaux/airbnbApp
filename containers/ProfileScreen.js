@@ -5,7 +5,7 @@ export default function ProfileScreen() {
   const { params } = useRoute();
   return (
     <View>
-      <Text>user id : {params.userId}</Text>
+      <Text></Text>
     </View>
   );
 }
