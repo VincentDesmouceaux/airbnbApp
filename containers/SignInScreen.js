@@ -17,7 +17,7 @@ import { useState } from "react";
 
 import axios from "axios";
 
-export default function SignInScreen({ setToken }) {
+export default function SignInScreen({ setToken, setId }) {
   const navigation = useNavigation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -70,10 +70,12 @@ export default function SignInScreen({ setToken }) {
                     password,
                   }
                 );
-                console.log(response.data);
-                alert("Bienvenue!");
 
+                alert("Bienvenue!");
+                const userToken = response.data.token;
+                const userID = response.data.id;
                 setToken(userToken);
+                setId(userID);
               } catch (error) {
                 console.log(error.message);
                 console.log(error.response.data);

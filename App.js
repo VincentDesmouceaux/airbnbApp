@@ -20,6 +20,7 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [userToken, setUserToken] = useState(null);
+  const [userId, setUserId] = useState(null);
 
   const setToken = async (token) => {
     if (token) {
@@ -29,6 +30,13 @@ export default function App() {
     }
 
     setUserToken(token);
+  };
+
+  const setId = async (id) => {
+    if (id) {
+      AsyncStorage.setItem("userId", id);
+      setUserId(id);
+    }
   };
 
   useEffect(() => {
@@ -63,10 +71,10 @@ export default function App() {
           // No token found, user isn't signed in
           <>
             <Stack.Screen name="SignIn">
-              {() => <SignInScreen setToken={setToken} />}
+              {() => <SignInScreen setToken={setToken} setId={setId} />}
             </Stack.Screen>
             <Stack.Screen name="SignUp">
-              {() => <SignUpScreen setToken={setToken} />}
+              {() => <SignUpScreen setToken={setToken} setId={setId} />}
             </Stack.Screen>
           </>
         ) : (
@@ -131,12 +139,12 @@ export default function App() {
                 </Tab.Screen>
 
                 <Tab.Screen
-                  name="TabSettings"
+                  name="Profile"
                   options={{
-                    tabBarLabel: "Settings",
+                    title: "My Profile",
                     tabBarIcon: ({ color, size }) => (
                       <Ionicons
-                        name={"ios-options"}
+                        name={"person-circle-outline"}
                         size={size}
                         color={color}
                       />
@@ -146,23 +154,32 @@ export default function App() {
                   {() => (
                     <Stack.Navigator>
                       <Stack.Screen
-                        name="Settings"
+                        name="Profil"
                         options={{
-                          title: "Settings",
+                          headerStyle: { backgroundColor: "white" },
+                          headerTitleStyle: { color: "white" },
+                          headerTitle: (props) => (
+                            <Image
+                              style={{ width: 30, height: 30 }}
+                              source={require("../airBnbapp/assets/airbnb_logo_icon_170605.png")}
+                              // resizeMode="contain"
+                            />
+                          ),
+                          headerTitleStyle: { flex: 1, textAlign: "center" },
                         }}
                       >
-                        {() => <SettingsScreen setToken={setToken} />}
+                        {(props) => (
+                          <ProfileScreen
+                            {...props}
+                            userToken={userToken}
+                            userId={userId}
+                            setToken={setToken}
+                            setId={setId}
+                          />
+                        )}
                       </Stack.Screen>
                     </Stack.Navigator>
                   )}
-                </Tab.Screen>
-                <Tab.Screen
-                  name="Profile"
-                  options={{
-                    title: "My Profile",
-                  }}
-                >
-                  {() => <ProfileScreen />}
                 </Tab.Screen>
 
                 <Tab.Screen
@@ -175,23 +192,25 @@ export default function App() {
                   }}
                 >
                   {() => (
-                    <Stack.Screen
-                      name="Map"
-                      options={{
-                        headerStyle: { backgroundColor: "white" },
-                        headerTitleStyle: { color: "white" },
-                        headerTitle: (props) => (
-                          <Image
-                            style={{ width: 30, height: 30 }}
-                            source={require("../airBnbapp/assets/airbnb_logo_icon_170605.png")}
-                            // resizeMode="contain"
-                          />
-                        ),
-                        headerTitleStyle: { flex: 1, textAlign: "center" },
-                      }}
-                    >
-                      {() => <AroundMeScreen />}
-                    </Stack.Screen>
+                    <Stack.Navigator>
+                      <Stack.Screen
+                        name="AroudMe"
+                        options={{
+                          headerStyle: { backgroundColor: "white" },
+                          headerTitleStyle: { color: "white" },
+                          headerTitle: (props) => (
+                            <Image
+                              style={{ width: 30, height: 30 }}
+                              source={require("../airBnbapp/assets/airbnb_logo_icon_170605.png")}
+                              // resizeMode="contain"
+                            />
+                          ),
+                          headerTitleStyle: { flex: 1, textAlign: "center" },
+                        }}
+                      >
+                        {() => <AroundMeScreen />}
+                      </Stack.Screen>
+                    </Stack.Navigator>
                   )}
                 </Tab.Screen>
               </Tab.Navigator>
